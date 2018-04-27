@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "date",
     "timezone_type",
     "timezone"
+    
 })
 public class ExpirationDate {
 
