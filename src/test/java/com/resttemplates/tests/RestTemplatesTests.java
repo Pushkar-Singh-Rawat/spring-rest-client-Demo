@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -83,6 +84,22 @@ public class RestTemplatesTests {
 
 		JsonNode updatedNode=restTemplate.patchForObject(api_url + customerID, httpEntity, JsonNode.class);
 		System.out.println("response: "+updatedNode);
+		
+	}
+	
+	@Test(expected=HttpClientErrorException.class)
+	public void testDeleteCustomer() {
+		String api_url = ROOT_URL + "/customers/";
+		RestTemplate restTemplate = new RestTemplate();
+		Map<String, Object> customer = new HashMap<>();
+		customer.put("firstname", "Ruby");
+		customer.put("lastname", "Hail");
+		JsonNode jsonNode = restTemplate.postForObject(api_url, customer, JsonNode.class);
+		System.out.println("Respomse: " + jsonNode);
+		String customerUrl = jsonNode.get("customer_url").textValue();
+		String customerID = customerUrl.split("/")[3];
+		restTemplate.delete(api_url+customerID);
+		restTemplate.getForObject(api_url+customerID,JsonNode.class);
 		
 	}
 
